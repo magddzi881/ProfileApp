@@ -1,58 +1,32 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import type { User } from "./models/User";
-import { fetchUsers } from "./api/api-users";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { LoginPage } from "./components/login";
+import UserList from "./components/furniture-list";
+import { useAuth0 } from "@auth0/auth0-react";
+import Profile from "./components/profile";
 
 function App() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated, isLoading } = useAuth0();
 
-  useEffect(() => {
-    fetchUsers()
-      .then((data) => setUsers(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) return <p>Loading users...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="app">
-      <h1>User List</h1>
-
-      {users.length === 0 ? (
-        <p>No users to display</p>
-      ) : (
-        <div className="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Role</th>
-                <th>Email</th>
-                <th>Birth Date</th>
-                <th>Phone</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.name}</td>
-                  <td>{user.role}</td>
-                  <td>{user.email}</td>
-                  <td>{user.birthDate}</td>
-                  <td>{user.phone}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={!isAuthenticated ? <LoginPage /> : <Navigate to="/furnitures" />}
+        />
+        <Route
+          path="/furnitures"
+          element={isAuthenticated ? <UserList /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/profile"
+          element={isAuthenticated ? <Profile /> : <Navigate to="/" />}
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
   );
 }
 
