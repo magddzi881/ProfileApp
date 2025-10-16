@@ -19,7 +19,7 @@ const furniture = [
   { id: 8, name: "Recliner Chair", category: "Chair", price: 700, inStock: true },
   { id: 9, name: "Wardrobe Sliding Doors", category: "Wardrobe", price: 1800, inStock: false },
   { id: 10, name: "TV Stand Modern", category: "TV Stand", price: 550, inStock: true },
-  { id: 11, name: "Corner Sofa L-Shaped", category: "Sofa", price: 2200, inStock: true },
+  { id: 11, name: "Corner Sofa", category: "Sofa", price: 2200, inStock: true },
   { id: 12, name: "Dining Chair Set", category: "Chair", price: 600, inStock: false },
   { id: 13, name: "Console Table Elegant", category: "Table", price: 400, inStock: true },
 ];
