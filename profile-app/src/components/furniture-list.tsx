@@ -5,10 +5,13 @@ import { fetchAll, createFurniture, deleteFurniture } from "../api/api-furniture
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import FurnitureModal from "./furniture-modal";
+import { useCallWithToken } from "../api/api-token";
 
 export default function FurnitureList() {
-  const { logout, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { logout, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
+  const { callWithToken, isAdmin } = useCallWithToken();
+  const [admin, setAdmin] = useState(false);
   const [furniture, setFurniture] = useState<Furniture[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,6 +26,10 @@ export default function FurnitureList() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    isAdmin().then(setAdmin);
+  }, []);
+
   const handleLogout = () => {
     logout({ logoutParams: { returnTo: window.location.origin } });
   };
@@ -33,12 +40,12 @@ export default function FurnitureList() {
 
   const handleAddFurniture = async (item: Omit<Furniture, "id">) => {
     try {
-      const created = await createFurniture(item);
+      const created = await callWithToken((token) => createFurniture(item, token));
       setFurniture((prev) => [...prev, created]);
       setShowModal(false);
     } catch (err) {
       console.error(err);
-      alert("Failed to add furniture");
+      alert((err as Error).message);
     }
   };
 
@@ -50,14 +57,7 @@ export default function FurnitureList() {
   const confirmDelete = async () => {
     if (!selectedItem) return;
     try {
-      // pobieramy token z Auth0
-      const token = await getAccessTokenSilently({
-        authorizationParams: {
-          audience: "https://my-api.profileapp",
-        },
-      });
-      await deleteFurniture(selectedItem.id, token);
-
+      await callWithToken((token) => deleteFurniture(selectedItem.id, token));
       setFurniture((prev) => prev.filter((f) => f.id !== selectedItem.id));
       setShowDeleteModal(false);
       setSelectedItem(null);
@@ -83,9 +83,11 @@ export default function FurnitureList() {
       </div>
 
       <h1>Furniture List</h1>
-      <button className="add-button" onClick={() => setShowModal(true)}>
-        Add Furniture
-      </button>
+      {admin && (
+        <button className="add-button" onClick={() => setShowModal(true)}>
+          Add Furniture
+        </button>
+      )}
 
       {furniture.length === 0 ? (
         <p>No furniture to display</p>
@@ -105,8 +107,8 @@ export default function FurnitureList() {
               {furniture.map((item) => (
                 <tr
                   key={item.id}
-                  onClick={() => handleRowClick(item)}
-                  className="clickable-row"
+                  onClick={admin ? () => handleRowClick(item) : undefined}
+                  className={admin ? "clickable-row" : ""}
                 >
                   <td>{item.id}</td>
                   <td>{item.name}</td>

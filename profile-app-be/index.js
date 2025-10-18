@@ -104,14 +104,24 @@ app.get("/api/furniture/:id", async (req, res) => {
   res.json(item);
 });
 
-// POST new furniture
-app.post("/api/furniture", async (req, res) => {
-  const { name, category, price, inStock } = req.body;
-  const newItem = await prisma.furniture.create({
-    data: { name, category, price, inStock },
-  });
-  res.status(201).json(newItem);
-});
+// POST new furniture (for role admin only)
+app.post(
+  "/api/furniture",
+  checkJwt,
+  checkRole("admin"),
+  async (req, res) => {
+    const { name, category, price, inStock } = req.body;
+    try {
+      const newItem = await prisma.furniture.create({
+        data: { name, category, price, inStock },
+      });
+      res.status(201).json(newItem);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Failed to create furniture" });
+    }
+  }
+);
 
 // DELETE furniture (for role admin only)
 app.delete(
