@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import FurnitureModal from "./furniture-modal";
 
 export default function FurnitureList() {
-  const { logout, isAuthenticated } = useAuth0();
+  const { logout, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const navigate = useNavigate();
   const [furniture, setFurniture] = useState<Furniture[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,13 +50,20 @@ export default function FurnitureList() {
   const confirmDelete = async () => {
     if (!selectedItem) return;
     try {
-      await deleteFurniture(selectedItem.id);
+      // pobieramy token z Auth0
+      const token = await getAccessTokenSilently({
+        authorizationParams: {
+          audience: "https://my-api.profileapp",
+        },
+      });
+      await deleteFurniture(selectedItem.id, token);
+
       setFurniture((prev) => prev.filter((f) => f.id !== selectedItem.id));
       setShowDeleteModal(false);
       setSelectedItem(null);
     } catch (err) {
       console.error(err);
-      alert("Failed to delete furniture");
+      alert((err as Error).message);
     }
   };
 
