@@ -45,6 +45,8 @@ docker compose build
 docker compose up
 ```
 
+The app will be available at `http://localhost:5173/`.
+
 ## Installation & Setup without Docker
 
 ### Backend Setup
@@ -174,6 +176,12 @@ The backend API includes automated tests for all furniture endpoints using Jest 
 
 - **DELETE /api/furniture/:id**
   - Returns 401 if the user is not authenticated.
+
+### Error Handling
+
+- `401 Unauthorized`: User not logged in or invalid JWT
+- `403 Forbidden`: User lacks permissions
+- `404 Not Found`: Resource does not exist
 
 ### Running Tests
 
