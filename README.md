@@ -65,7 +65,9 @@ The backend API will be available at `http://localhost:3000`.
 npm install
 ```
 
-2. Update Auth0 configuration in the `Auth0Provider` (in `profile-app/main.tsx`):
+2. Update Auth0 configuration
+
+- in the `Auth0Provider` (in `profile-app/main.tsx`):
 
 ```ts
 <Auth0Provider
@@ -76,6 +78,15 @@ npm install
     audience: "YOUR_AUTH0_API_IDENTIFIER",
   }}
 >
+```
+
+- and in the config file (in `profile-app/config.tsx`) change the `audience` parameter:
+
+```ts
+export const API = {
+  audience: "YOUR_AUTH0_API_IDENTIFIER",
+  roles: () => `${API.audience}/roles`,
+};
 ```
 
 3. Start the React + Vite app:

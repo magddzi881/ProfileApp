@@ -60,7 +60,7 @@ function checkRole(requiredRole) {
     if (!req.user) return res.status(401).json({ message: "Not authenticated" });
 
     const rolesClaimNames = [
-      "https://my-api.profileapp/roles",
+      `${AUTH0_AUDIENCE}/roles`,
       "roles",
       "role",
       "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
