@@ -6,15 +6,16 @@ A full-stack web application for managing furniture items with role-based access
 
 - [Overview](#overview)
 - [Features](#features)
-- [Installation & Setup without Docker](#installation--setup-without-docker)
+- [Installation & Setup](#installation--setup)
+  - [Auth0 Configuration](#auth0-configuration)
   - [Backend Setup](#backend-setup)
   - [Frontend Setup](#frontend-setup)
-- [Installation & Setup with Docker](#installation--setup-with-docker)
+- [Running with Docker](#running-with-docker)
 - [Usage](#usage)
 - [Tech Stack](#tech-stack)
 - [Endpoints](#endpoints)
 - [Testing](#testing)
-  - [Furniture API Tests](#furniture-api-tests)
+  - [API Tests](#api-tests)
   - [Error Handling](#error-handling)
   - [Running Tests](#running-tests)
 - [Screenshots](#screenshots)
@@ -42,38 +43,70 @@ This application consists of:
 - CI/CD pipeline for backend,
 - Mock data for testing.
 
-## Installation & Setup without Docker
+## Installation & Setup
+
+### Auth0 Configuration
+
+1. Navigate to the frontend configuration file (`profile-app/config.tsx`) and replace the following values with your own Auth0 configuration:
+
+   ```ts
+   audience: "<YOUR_AUTH0_API_IDENTIFIER>",
+   domain: "<YOUR_AUTH0_DOMAIN>",
+   clientId: "<YOUR_AUTH0_CLIENT_ID>",
+   ```
+
+2. Navigate to the backend folder (`profile-app-be/`) and create a `.env` file with the following:
+
+   ```env
+   DATABASE_URL="file:./dev.db" # Database connection
+
+   AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
+   AUTH0_AUDIENCE=YOUR_AUTH0_API_IDENTIFIER
+   PORT=3000
+   ```
+
+3. Create a Custom Post-Login Action in the Actions Library (e.g. `Add roles to access token`).
+
+   - Paste the following code into the action to add user roles to the token:
+
+   ```ts
+   exports.onExecutePostLogin = async (event, api) => {
+     const namespace = "YOUR_AUTH0_API_IDENTIFIER";
+
+     if (event.authorization) {
+       api.accessToken.setCustomClaim(
+         `${namespace}/roles`,
+         event.authorization.roles
+       );
+     }
+   };
+   ```
+
+   - Attach the Action to the login trigger in the Auth0 dashboard.
+
+_For development purposes, this repository includes temporary working Auth0 credentials, users with assigned roles, custom trigger action, `config.tsx` and `.env` files (rename `profile-app-be/env-file-template.txt`)
+These are **only intended for local development** and may be removed at any time._
 
 ### Backend Setup
 
 1. Navigate to the backend folder and install dependencies:
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
-2. Update Auth0 configuration:
+2. Run Prisma migrations and seed the database:
 
-- Create a `.env` file with the following (or change the name of `profile-app-be/env-file-template.txt` file):
+   ```bash
+   npx prisma migrate dev --name init
+   npm run seed
+   ```
 
-```env
-AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
-AUTH0_AUDIENCE=YOUR_AUTH0_API_IDENTIFIER
-PORT=3000
-```
+3. Start the backend server:
 
-3. Run Prisma migrations and seed the database:
-
-```bash
-npx prisma migrate dev --name init
-npm run seed
-```
-
-4. Start the backend server:
-
-```bash
-npm start
-```
+   ```bash
+   npm start
+   ```
 
 The backend API will be available at `http://localhost:3000`.
 
@@ -81,72 +114,50 @@ The backend API will be available at `http://localhost:3000`.
 
 1. Navigate to the frontend folder and install dependencies:
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
-2. Update Auth0 configuration
+2. Start the React + Vite app:
 
-- in the `Auth0Provider` (in `profile-app/main.tsx`):
+   ```bash
+   npm run dev
+   ```
 
-```ts
-<Auth0Provider
-  domain="YOUR_AUTH0_DOMAIN"
-  clientId="YOUR_AUTH0_CLIENT_ID"
-  authorizationParams={{
-    redirect_uri: window.location.origin,
-    audience: "YOUR_AUTH0_API_IDENTIFIER",
-  }}
->
-```
+The frontend will be available at `http://localhost:5173`.
 
-- and in the config file (in `profile-app/config.tsx`) change the `audience` parameter:
+## Running with Docker
 
-```ts
-export const API = {
-  audience: "YOUR_AUTH0_API_IDENTIFIER",
-  roles: () => `${API.audience}/roles`,
-};
-```
+1. Update the Auth0 configuration: [Auth0 Configuration](#auth0-configuration)
 
-3. Start the React + Vite app:
+2. Build both the backend and frontend images from the root folder:
 
-```bash
-npm run dev
-```
-
-The frontend will be available at `http://localhost:5173/`.
-
-## Installation & Setup with Docker
-
-1. Update Auth0 configuration ([Backend Setup](#backend-setup) & [Frontend Setup](#frontend-setup) Auth0 configuration).
-
-2. Build both the backend and frontend images:
-
-```bash
-docker compose build
-```
+   ```bash
+   docker compose build
+   ```
 
 3. Start all services:
 
-```bash
-docker compose up
-```
+   ```bash
+   docker compose up
+   ```
 
-The app will be available at `http://localhost:5173/` (API at `http://localhost:3000`).
+The app will be available at `http://localhost:5173` (API at `http://localhost:3000`).
 
 ## Usage
 
 1. Open the frontend in a browser.
-2. Log in or sign in via Auth0, create sample accounts e.g.:
+2. Log in via Auth0 or create an account, then create sample users and assign them roles (e.g., admin, user):
 
-- Admin
-  Email: `admin@admin.pl`
-  Password: `Admin123!`
+   - Admin -
+     Email: `admin@admin.com`
+     Password: `Admin123!`
+     Role: `admin`
 
-- User
-  Email: `user@user.pl`
-  Password: `User123!`
+   - User -
+     Email: `user@user.com`
+     Password: `User123!`
+     Role: `user`
 
 3. Explore the furniture list, add new items (admin only), or delete items (admin only). View user profile or log out.
 
@@ -173,7 +184,7 @@ The app will be available at `http://localhost:5173/` (API at `http://localhost:
 
 The backend API includes automated tests for all furniture endpoints using Jest and Supertest. Prisma and authentication middleware are fully mocked to isolate tests from the database and external services.
 
-### Furniture API Tests
+### API Tests
 
 - **GET /api/furniture**
 

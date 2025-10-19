@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { API } from "./config";
+import { API, AUTH } from "./config";
 
 const container = document.getElementById("root");
 if (!container) throw new Error("Root container not found");
@@ -19,8 +19,8 @@ const onRedirectCallback = (appState: any) => {
 
 root.render(
   <Auth0Provider
-    domain="dev-mcymrcydcldznktj.us.auth0.com"
-    clientId="0BIH1jmbf3jhN2nYaSYBliP6IF1aV6EJ"
+    domain={AUTH.domain}
+    clientId={AUTH.clientId}
     authorizationParams={{
       redirect_uri: window.location.origin,
       audience: API.audience,
