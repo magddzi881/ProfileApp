@@ -20,7 +20,9 @@ This application consists of:
 - Delete furniture items (admin only),
 - View user profile,
 - Log in or create a new account,
-- JWT-based authentication and role integration via Auth0.
+- JWT-based authentication and role integration via Auth0,
+- Docker integration,
+- CI/CD pipeline for backend.
 
 ## Installation & Setup with Docker
 
