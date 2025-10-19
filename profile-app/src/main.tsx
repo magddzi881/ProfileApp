@@ -3,11 +3,18 @@ import App from "./App";
 import "./index.css";
 import { Auth0Provider } from "@auth0/auth0-react";
 
-const container = document.getElementById('root');
-if (!container) {
-  throw new Error("Root container not found");
-}
+const container = document.getElementById("root");
+if (!container) throw new Error("Root container not found");
+
 const root = createRoot(container);
+
+const onRedirectCallback = (appState: any) => {
+  window.history.replaceState(
+    {},
+    document.title,
+    appState?.returnTo || "/furnitures"
+  );
+};
 
 root.render(
   <Auth0Provider
@@ -17,7 +24,9 @@ root.render(
       redirect_uri: window.location.origin,
       audience: "https://my-api.profileapp",
     }}
+    onRedirectCallback={onRedirectCallback}
+    cacheLocation="localstorage"
   >
     <App />
-  </Auth0Provider>,
+  </Auth0Provider>
 );

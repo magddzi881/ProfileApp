@@ -14,6 +14,14 @@ export const LoginPage = () => {
     });
   };
 
+  const handleSignUp = () => {
+    loginWithRedirect({
+      authorizationParams: {
+        screen_hint: "signup", 
+      },
+    });
+  };
+
   return (
     <div className="login-container">
       <h1>Login</h1>
@@ -30,7 +38,10 @@ export const LoginPage = () => {
         />
         <button type="submit">Login</button>
       </form>
-      
+
+      <button className="signup-button" onClick={handleSignUp}>
+        New User? Sign Up
+      </button>
     </div>
   );
 };
