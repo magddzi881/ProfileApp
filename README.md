@@ -34,7 +34,7 @@ npm install
 
 2. Configure environment variables:
 
-- Create a `.env` file with the following (or change the `profile-app-be/env-file-template.txt` file):
+- Create a `.env` file with the following (or change the name of `profile-app-be/env-file-template.txt` file):
 
 ```env
 AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
@@ -112,6 +112,14 @@ The frontend will be available at `http://localhost:5173/`.
 
 3. Explore the furniture list, add new items (admin only), or delete items (admin only). View user profile or log out.
 
+## Tech Stack
+
+- **Frontend**: React + Vite, TypeScript
+- **Backend**: Node.js + Express, Prisma
+- **Database**: SQLite
+- **Authentication**: Auth0
+- **Authorization**: Role-based (admin/user) with JWT
+
 ## Endpoints
 
 | Method | Endpoint             | Role  | Description                 |
@@ -121,13 +129,36 @@ The frontend will be available at `http://localhost:5173/`.
 | POST   | `/api/furniture`     | Admin | Add a new furniture item    |
 | DELETE | `/api/furniture/:id` | Admin | Delete furniture item by ID |
 
-## Tech Stack
+## Testing
 
-- **Frontend**: React + Vite, TypeScript
-- **Backend**: Node.js + Express, Prisma
-- **Database**: SQLite
-- **Authentication**: Auth0
-- **Authorization**: Role-based (admin/user) with JWT
+The backend API includes automated tests for all furniture endpoints using Jest and Supertest. Prisma and authentication middleware are fully mocked to isolate tests from the database and external services.
+
+### Furniture API Tests
+
+- **GET /api/furniture**
+
+  - Returns a list of furniture items.
+  - Returns an empty array if no furniture is present.
+
+- **GET /api/furniture/:id**
+
+  - Returns a furniture item by ID.
+  - Returns 404 if the furniture item does not exist.
+
+- **POST /api/furniture**
+
+  - Returns 401 if the user is not authenticated.
+
+- **DELETE /api/furniture/:id**
+  - Returns 401 if the user is not authenticated.
+
+### Running Tests
+
+From the backend folder:
+
+```bash
+npm test
+```
 
 ## Screenshots
 

@@ -6,6 +6,6 @@
 
 DATABASE_URL="file:./dev.db"
 
-AUTH0_DOMAIN=
-AUTH0_AUDIENCE=
-PORT=
+AUTH0_DOMAIN=dev-mcymrcydcldznktj.us.auth0.com
+AUTH0_AUDIENCE=https://my-api.profileapp  
+PORT=3000
