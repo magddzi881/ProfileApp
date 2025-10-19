@@ -11,7 +11,7 @@ This application consists of:
 - **Authentication & Authorization**: Auth0 handles login and JWT tokens. The app supports role-based access:
 
   - **User**: Can view furniture lists and their profile.
-  - **Admin**: Can view, add, and delete furniture items.
+  - **Admin**: Can view, add, and delete furniture items. View their profile.
 
 ## Features
 
@@ -34,7 +34,7 @@ npm install
 
 2. Configure environment variables:
 
-Create a `.env` file with the following (change the `profile-app-be/env-file-template.txt` file):
+- Create a `.env` file with the following (or change the `profile-app-be/env-file-template.txt` file):
 
 ```env
 AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
@@ -89,17 +89,15 @@ The frontend will be available at `http://localhost:5173/`.
 ## Usage
 
 1. Open the frontend in a browser.
-2. Log in or sign in via Auth0 using sample accounts:
+2. Log in or sign in via Auth0 (create sample accounts e.g.):
 
-**Admin**
+- Admin
+  Email: `admin@admin.pl`
+  Password: `Admin123!`
 
-- Email: `admin@admin.pl`
-- Password: `Admin123!`
-
-**User**
-
-- Email: `user@user.pl`
-- Password: `User123!`
+- User
+  Email: `user@user.pl`
+  Password: `User123!`
 
 3. Explore the furniture list, add new items (admin only), or delete items (admin only). View user profile or log out.
 
@@ -119,3 +117,9 @@ The frontend will be available at `http://localhost:5173/`.
 - **Database**: SQLite
 - **Authentication**: Auth0
 - **Authorization**: Role-based (admin/user) with JWT
+
+## Screenshots
+
+![List](1.png)
+![Add](2.png)
+![Login](3.png)
