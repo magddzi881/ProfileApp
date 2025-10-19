@@ -193,6 +193,6 @@ npm test
 
 ## Screenshots
 
-![List](1.png)
-![Add](2.png)
-![Login](3.png)
+![List](assets/1.png)
+![Add](assets/2.png)
+![Login](assets/3.png)
