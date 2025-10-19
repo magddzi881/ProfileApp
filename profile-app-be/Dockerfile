@@ -1,23 +1,22 @@
-# Use official Node.js LTS image
+# Backend Dockerfile
 FROM node:20-alpine
 
-# Set working directory
 WORKDIR /app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --production
+# Install all dependencies (devDependencies needed for Prisma)
+RUN npm install
 
-# Copy the rest of the backend code
+# Copy backend source code
 COPY . .
 
-# Run Prisma migrations and seed the database
+# Generate Prisma client
 RUN npx prisma generate
 
-# Expose the port
+# Expose backend port
 EXPOSE 3000
 
-# Start the backend
-CMD ["npm", "start"]
+# Run migrations, seed and start backend
+CMD sh -c "npx prisma migrate deploy && npm run seed && npm start"

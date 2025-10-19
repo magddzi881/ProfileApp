@@ -1,6 +1,23 @@
 # Profile (Furniture) App
 
-A full-stack web application for managing furniture items with role-based access control, built with React, Node.js, Express, Prisma, and SQLite. Authentication and authorization are handled using Auth0 and JWT tokens.
+A full-stack web application for managing furniture items with role-based access control, built with React, Node.js, Express, Prisma, and SQLite. Authentication and authorization are handled using Auth0 and JWT tokens. The application is containerized with Docker for easy deployment, and includes automated tests.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Installation & Setup without Docker](#installation--setup-without-docker)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [Installation & Setup with Docker](#installation--setup-with-docker)
+- [Usage](#usage)
+- [Tech Stack](#tech-stack)
+- [Endpoints](#endpoints)
+- [Testing](#testing)
+  - [Furniture API Tests](#furniture-api-tests)
+  - [Error Handling](#error-handling)
+  - [Running Tests](#running-tests)
+- [Screenshots](#screenshots)
 
 ## Overview
 
@@ -22,30 +39,8 @@ This application consists of:
 - Log in or create a new account,
 - JWT-based authentication and role integration via Auth0,
 - Docker integration,
-- CI/CD pipeline for backend.
-
-## Installation & Setup with Docker
-
-1. Navigate to the root folder and set variables in `docker-compose.yml` file:
-
-```env
-AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
-AUTH0_AUDIENCE=YOUR_AUTH0_API_IDENTIFIER
-```
-
-2. Build both the backend and frontend images:
-
-```bash
-docker compose build
-```
-
-3. Start all services:
-
-```bash
-docker compose up
-```
-
-The app will be available at `http://localhost:5173/`.
+- CI/CD pipeline for backend,
+- Mock data for testing.
 
 ## Installation & Setup without Docker
 
@@ -57,7 +52,7 @@ The app will be available at `http://localhost:5173/`.
 npm install
 ```
 
-2. Configure environment variables:
+2. Update Auth0 configuration:
 
 - Create a `.env` file with the following (or change the name of `profile-app-be/env-file-template.txt` file):
 
@@ -122,10 +117,28 @@ npm run dev
 
 The frontend will be available at `http://localhost:5173/`.
 
+## Installation & Setup with Docker
+
+1. Update Auth0 configuration ([Backend Setup](#backend-setup) & [Frontend Setup](#frontend-setup) Auth0 configuration).
+
+2. Build both the backend and frontend images:
+
+```bash
+docker compose build
+```
+
+3. Start all services:
+
+```bash
+docker compose up
+```
+
+The app will be available at `http://localhost:5173/` (API at `http://localhost:3000`).
+
 ## Usage
 
 1. Open the frontend in a browser.
-2. Log in or sign in via Auth0 (create sample accounts e.g.):
+2. Log in or sign in via Auth0, create sample accounts e.g.:
 
 - Admin
   Email: `admin@admin.pl`
@@ -144,6 +157,8 @@ The frontend will be available at `http://localhost:5173/`.
 - **Database**: SQLite
 - **Authentication**: Auth0
 - **Authorization**: Role-based (admin/user) with JWT
+- **Containerization**: Docker
+- **CI/CD Pipeline**: GitHub Actions
 
 ## Endpoints
 

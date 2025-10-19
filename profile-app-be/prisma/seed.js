@@ -18,11 +18,24 @@ const furniture = [
 ];
 
 async function main() {
-  for (const item of furniture) {
-    await prisma.furniture.create({ data: item });
+
+  // Uncomment line to clear existing data
+  // await prisma.furniture.deleteMany();
+  
+  const count = await prisma.furniture.count();
+  if (count === 0) {
+    for (const item of furniture) {
+      await prisma.furniture.create({ data: item });
+    }
+    console.log("Seed completed");
+  } else {
+    console.log("Furniture table already has data, skipping seed.");
   }
 }
 
 main()
-  .catch(e => console.error(e))
+  .catch(e => {
+    console.error(e);
+    process.exit(1);
+  })
   .finally(async () => await prisma.$disconnect());
