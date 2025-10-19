@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./profile-app-be
+    container_name: profile-backend
+    ports:
+      - "3000:3000"
+    environment:
+      AUTH0_DOMAIN: mcymrcydcldznktj.us.auth0.com
+      AUTH0_AUDIENCE: https://my-api.profileapp
+      PORT: 3000
+    volumes:
+      - ./profile-app-be:/app
+    depends_on:
+      - db
+
+  frontend:
+    build: ./profile-app
+    container_name: profile-frontend
+    ports:
+      - "5173:80"
+
+  db:
+    image: nouchka/sqlite3
+    container_name: profile-db
+    volumes:
+      - ./backend/dev.db:/data/dev.db
+    ports:
+      - "8080:8080"

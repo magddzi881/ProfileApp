@@ -22,7 +22,28 @@ This application consists of:
 - Log in or create a new account,
 - JWT-based authentication and role integration via Auth0.
 
-## Installation & Setup
+## Installation & Setup with Docker
+
+1. Navigate to the root folder and set variables in `docker-compose.yml` file:
+
+```env
+AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
+AUTH0_AUDIENCE=YOUR_AUTH0_API_IDENTIFIER
+```
+
+2. Build both the backend and frontend images:
+
+```bash
+docker compose build
+```
+
+3. Start all services:
+
+```bash
+docker compose up
+```
+
+## Installation & Setup without Docker
 
 ### Backend Setup
 
