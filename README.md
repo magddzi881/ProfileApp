@@ -1,4 +1,4 @@
-# Furniture App
+# Profile (Furniture) App
 
 A full-stack web application for managing furniture items with role-based access control, built with React, Node.js, Express, Prisma, and SQLite. Authentication and authorization are handled using Auth0 and JWT tokens.
 
